@@ -1,0 +1,51 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: python-app
+  namespace: app
+  labels:
+    app: python
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      # serviceAccountName: jenkins
+      securityContext:
+        fsGroup: 1000
+      containers:
+      - name: python
+        image: 070814490905.dkr.ecr.eu-central-1.amazonaws.com/eks-repo:4lwUJFND
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        # - containerPort: 50000
+        # readinessProbe:
+        #   httpGet:
+        #     path: /login
+        #     port: 5001
+        #   initialDelaySeconds: 300
+        #   periodSeconds: 10
+        #   timeoutSeconds: 5
+        #   successThreshold: 2
+        #   failureThreshold: 5
+        # volumeMounts:
+        # - mountPath: /var/jenkins_home
+        #   name: jenkins-home
+        # resources:
+        #   limits:
+        #     cpu: 800m
+        #     memory: 3Gi
+        #   requests:
+        #     cpu: 100m
+        #     memory: 3Gi
+      # volumes:
+      # - name: jenkins-home
+      #   persistentVolumeClaim:
+      #     claimName: jenkins-claim1

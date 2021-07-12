@@ -1,0 +1,16 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: python-app
+  namespace: app
+spec:
+  type: LoadBalancer
+  selector:
+    app: app
+  ports:
+    - protocol: TCP
+      port: 8090
+      targetPort: 5000
+      nodePort: 30110
+      name: ui
