@@ -2,15 +2,15 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: python-app
+  name: python-app-4863
   namespace: app
 spec:
   type: LoadBalancer
   selector:
-    app: app-Z2DhvPsF
+    app: app-HgPej81a
   ports:
     - protocol: TCP
       port: 8090
       targetPort: 5000
-      nodePort: 32222
+      nodePort: 30000
       name: ui

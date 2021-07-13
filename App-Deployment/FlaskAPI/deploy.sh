@@ -2,6 +2,7 @@
 
 random=$(openssl rand -base64 6)
 currentlabel=$(cat prod-label.txt)
+name=$(echo $RANDOM)
 
 ##Latest Version can be found at this file after the deployment.
 # echo $random > version.txt
@@ -15,12 +16,12 @@ make ver=$random docker-all
 
 greendeployment() { 
 
-sed "s/{version}/$random/g" base/deployment.yaml > green-deploy/deployment.yaml
-sed "s/{version}/$random/g" base/service.yaml > green-deploy/service.yaml
+sed -e "s/{version}/$random/g" -e "s/{name}/$name/" base/deployment.yaml > green-deploy/deployment.yaml
+sed -e "s/{version}/$random/g" -e "s/{name}/$name/" base/service.yaml > green-deploy/service.yaml
 
-cd green-deploy
-kubectl apply -f deployment.yaml
-kubectl apply -f service.yaml
+
+kubectl apply -f green-deploy/deployment.yaml
+kubectl apply -f green-deploy/service.yaml
 } 
 
 green-rollback(){
@@ -48,23 +49,20 @@ greenrolling() {
     kubectl delete -f prod-deploy/deployment.yaml
     sed -i '' "s/$currentlabel/app: app-$random/" prod-label.txt
     echo $random > version.txt
+    cp green-deploy/deployment.yaml prod-deploy/deployment.yaml
 }
 
 greenrollback(){
-cp prod-deploy/service.yaml_bkp prod-deploy/service.yaml
-cp green-deploy/service.yaml_bkp green-deploy/service.yaml
 
+## Prod Service Will point back to old Deployment
+cp prod-deploy/service.yaml_bkp prod-deploy/service.yaml
 kubectl apply -f prod-deploy/service.yaml
-kubectl apply -f green-deploy/service.yaml
 
 #Destroy Green Deployment
 kubectl delete -f green-deploy/service.yaml 
 kubectl delete -f green-deploy/deployment.yaml
 
 }
-
-# var=randomkjfd
-# sed  "s/app: app/app: app-$var/" prod-service.txt
 
 
 echo "Type of Deployment: First or BlueGreen"
@@ -89,11 +87,11 @@ case $deployment in
 
     read -p "Test of Green Env is working: 0 or 1:  " result
     echo $result
-    if [ $result -eq 0 ];then green-prod-push; else green-rollback; fi 
+    if [ $result -eq 0 ];then green-prod-push; else green-rollback;exit; fi 
     # if [ $result -gt 0 ];then echo "Success"; else echo "Fail"; fi
 
     read -p "Testing result of prod/Blue Env: 0 or 1:  " prod_result
-    if [ $prod_result -gt 0 ];then greenrolling; else greenrollback; fi
+    if [ $prod_result -eq 0 ];then greenrolling; else greenrollback; fi
     ;;
     *)
     echo "Please enter one of two option:

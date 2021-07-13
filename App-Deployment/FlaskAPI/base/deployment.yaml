@@ -7,7 +7,7 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: python-app-{version}
+  name: python-app-{name}
   namespace: app
   labels:
     app: python-{version}

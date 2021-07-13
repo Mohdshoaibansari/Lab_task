@@ -2,7 +2,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: python-app-{version}
+  name: python-app-{name}
   namespace: app
 spec:
   type: LoadBalancer

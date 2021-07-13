@@ -1,7 +1,7 @@
 AWS_ACCOUNT_ID ?= $(shell aws sts get-caller-identity --query Account --output text)
 AWS_REGION = eu-central-1
 
-DOCKER_TAG = 4lwUJFND
+DOCKER_TAG = Z2DhvPsF
 ECR ?= ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 ECR_REPO ?= ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/eks-repo
 

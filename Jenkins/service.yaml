@@ -1,0 +1,52 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: jenkins-ui
+  namespace: jenkins
+spec:
+  type: LoadBalancer
+  selector:
+    app: jenkins-master
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30100
+      name: ui
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: jenkins-discovery
+  namespace: jenkins
+spec:
+  # type: ClusterIP
+  selector:
+    app: jenkins-master
+  ports:
+    - protocol: TCP
+      port: 50000
+      targetPort: 50000
+      name: agents
+
+# ---
+# kind: Service
+# apiVersion: v1
+# metadata:
+#   name: jenkins-ui
+#   namespace: jenkins
+# spec:
+#   type: ClusterIP
+#   ports:
+#     - name: ui
+#       port: 8080
+#       targetPort: 8080
+#       protocol: TCP
+#     - name: slave
+#       port: 50000
+#       protocol: TCP
+#     - name: http
+#       port: 80
+#       targetPort: 8080

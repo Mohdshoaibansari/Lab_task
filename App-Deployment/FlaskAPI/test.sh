@@ -1,7 +1,5 @@
-green-prod-push() { 
+    read -p "Test of Green Env is working: 0 or 1:  " result
+    echo $result
+    if [ $result -eq 0 ];then echo $result; else echo "Fail";exit; fi
 
-## Backup of both Services Files
-echo "test"
-}
-
-green-prod-push
+    echo "Out"
